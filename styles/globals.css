@@ -1,3 +1,30 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.loader,
+.loader:before,
+.loader:after {
+  box-sizing: border-box;
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+@keyframes circle-loader {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loader.simple-circle {
+  transform-origin: center center;
+  border: 3px solid #cfcfcf;
+  border-right-color: #fff;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  animation: circle-loader 1s infinite linear;
+}
