@@ -26,13 +26,18 @@ interface IPokemonCardProps {
   id: number;
   name: string;
   types: IPokemonType[];
+  openModal: (id: number) => void;
 }
 
-function PokemonCard({ id, name, types }: IPokemonCardProps) {
-  console.log("ßßßß", types);
-  const pokemonTypes = types.reduce((acc, val) => acc.concat(val.types), []);
+function PokemonCard({ id, name, types, openModal }: IPokemonCardProps) {
+  let pokemonTypes = types.reduce((acc, val) => acc.concat(val.types), []);
+  //filter unique values of type cause of a bug in the api that returns duplicates for some pokemons
+  pokemonTypes = [
+    ...pokemonTypes
+      .reduce((map, obj) => map.set(obj.type.name, obj), new Map())
+      .values(),
+  ];
 
-  console.log("ßßßß2222", pokemonTypes);
   const getBackgroundType = (type: IPokemonType[]) => {
     const pokeType = type[0].type.name;
     return `radial-gradient(circle at 50% 0%, ${typeColor[pokeType]} 36%, #fff 36%)`;
@@ -57,7 +62,10 @@ function PokemonCard({ id, name, types }: IPokemonCardProps) {
   };
 
   return (
-    <div className="my-1 px-1 w-full md:w-1/2 lg:my-4 lg:px-4 lg:w-1/5">
+    <div
+      className="my-1 px-1 w-full md:w-1/2 lg:my-4 lg:px-4 lg:w-1/5 transform transition duration-500 hover:scale-110 cursor-pointer"
+      onClick={() => openModal(id)}
+    >
       <article
         className="overflow-hidden rounded-lg shadow-lg"
         style={{

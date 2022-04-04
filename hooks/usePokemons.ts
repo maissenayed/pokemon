@@ -2,14 +2,12 @@ import { gql } from "graphql-request";
 import { useQueryClient, useInfiniteQuery, useQuery } from "react-query";
 import { graphQLClient } from "../shared/request";
 
-function usePokemons(selectedGeneration = "") {
+function usePokemons(selectedGeneration: string) {
   const queryCache = useQueryClient();
   const generations = queryCache.getQueryData(["generations"]);
-  console.log("generations", generations);
   const genCount =
     generations?.generations?.find((gen) => gen.name === selectedGeneration)
       ?.pokemon_species.aggregate.count || 0;
-  console.log("limit", genCount);
   const itemsPerPage = 20;
 
   return useInfiniteQuery(

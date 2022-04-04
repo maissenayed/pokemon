@@ -7,6 +7,7 @@ export default function Document() {
       <body className="bg-slate-100	min-h-screen">
         <Main />
         <NextScript />
+        <div id="modal"></div>
       </body>
     </Html>
   );

@@ -2,6 +2,9 @@
 import usePokemons from "../hooks/usePokemons";
 import PokemonCard from "./PokemonCard";
 import LoaderSvg from "../assets/loader.svg";
+import { useState } from "react";
+import Modal from "./Modal";
+import { useQueryClient } from "react-query";
 
 interface IPokemonsListProps {
   generation: string;
@@ -10,7 +13,26 @@ interface IPokemonsListProps {
 function PokemonsList({ generation }: IPokemonsListProps) {
   const { data, hasNextPage, fetchNextPage, isFetchingNextPage } =
     usePokemons(generation);
-  console.log({ hasNextPage });
+  const [isModalOpened, setIsModalOpened] = useState(false);
+  const [selectedPokemon, setselectedPokemon] = useState(null);
+  const queryCache = useQueryClient();
+
+  const openModal = (pokemonId: number) => {
+    setIsModalOpened(true);
+    const pokemons = queryCache.getQueryData(["pokemons", generation]);
+    const pokemonData = {};
+    pokemons.pages.forEach((page) => {
+      pokemonData = page.species?.find((el) => el.id === pokemonId);
+    });
+    setselectedPokemon(pokemonData);
+
+    //setselectedPokemonId();
+  };
+
+  const closeModal = () => {
+    setIsModalOpened(false);
+    setselectedPokemon(null);
+  };
 
   return (
     <>
@@ -18,10 +40,22 @@ function PokemonsList({ generation }: IPokemonsListProps) {
         <div className="flex flex-wrap -mx-1 lg:-mx-4">
           {data?.pages.map((page) =>
             page.species?.map(({ id, name, details }) => (
-              <PokemonCard key={name} id={id} name={name} types={details} />
+              <PokemonCard
+                key={name}
+                id={id}
+                name={name}
+                types={details}
+                openModal={openModal}
+              />
             ))
           )}
         </div>
+
+        <Modal
+          isOpened={isModalOpened}
+          closeModal={closeModal}
+          selectedPokemon={selectedPokemon}
+        />
 
         <div className="flex justify-center mt-6">
           {hasNextPage ? (
