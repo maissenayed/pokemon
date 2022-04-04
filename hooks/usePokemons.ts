@@ -6,18 +6,21 @@ function usePokemons(selectedGeneration = "") {
   const queryCache = useQueryClient();
   const generations = queryCache.getQueryData(["generations"]);
   console.log("generations", generations);
-  const genLlimit = generations?.generations?.find(
-    (gen) => gen.name === selectedGeneration
-  )?.pokemon_species.aggregate.count;
-  console.log("limit", genLlimit);
+  const genCount =
+    generations?.generations?.find((gen) => gen.name === selectedGeneration)
+      ?.pokemon_species.aggregate.count || 0;
+  console.log("limit", genCount);
+  const itemsPerPage = 20;
 
-  return useQuery(["pokemons", selectedGeneration], async () => {
-    const query = gql`
+  return useInfiniteQuery(
+    ["pokemons", selectedGeneration],
+    async ({ pageParam = 0 }) => {
+      const query = gql`
       query pokemon_details {
         species: pokemon_v2_pokemonspecies(
           where: { pokemon_v2_generation: { name: { _eq: "${selectedGeneration}" } } }
-          limit: 10
-          offset: 0
+          limit: ${itemsPerPage}
+          offset: ${pageParam}
         ) {
           id
           name
@@ -103,8 +106,19 @@ function usePokemons(selectedGeneration = "") {
       }
     `;
 
-    return await graphQLClient.request(query);
-  });
+      return await graphQLClient.request(query);
+    },
+    {
+      getNextPageParam: (_lastPage, pages) => {
+        if (pages.length < Math.round(genCount / itemsPerPage)) {
+          return pages.length * itemsPerPage;
+        } else {
+          return undefined;
+        }
+      },
+      keepPreviousData: true,
+    }
+  );
 }
 
 export default usePokemons;

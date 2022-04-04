@@ -8,29 +8,19 @@ interface IPokemonsListProps {
 }
 
 function PokemonsList({ generation }: IPokemonsListProps) {
-  /* const { data, hasNextPage, fetchNextPage, isFetchingNextPage } =
-    usePokemons(generation); 
-  console.log(data);
-  console.log({ hasNextPage });*/
-  const { data } = usePokemons(generation);
-  const hasNextPage = true;
-  const isFetchingNextPage = false;
-  const fetchNextPage = () => {};
-  console.log("+++", data);
+  const { data, hasNextPage, fetchNextPage, isFetchingNextPage } =
+    usePokemons(generation);
+  console.log({ hasNextPage });
 
   return (
     <>
       <div className="container my-12 mx-auto px-4 md:px-12">
         <div className="flex flex-wrap -mx-1 lg:-mx-4">
-          {/*data?.pages.map((page) =>
-            page.pokemons?.map(({ id, name, type }) => (
-              <PokemonCard key={id} id={id} name={name} type={type} />
+          {data?.pages.map((page) =>
+            page.species?.map(({ id, name, details }) => (
+              <PokemonCard key={name} id={id} name={name} types={details} />
             ))
-            )*/}
-
-          {data?.species?.map(({ id, name, details }) => (
-            <PokemonCard key={id} id={id} name={name} types={details} />
-          ))}
+          )}
         </div>
 
         <div className="flex justify-center mt-6">

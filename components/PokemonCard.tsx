@@ -29,8 +29,9 @@ interface IPokemonCardProps {
 }
 
 function PokemonCard({ id, name, types }: IPokemonCardProps) {
-  const pokemonTypes = types.reduce((acc, val) => acc.concat(val.types), []);
   console.log("ßßßß", types);
+  const pokemonTypes = types.reduce((acc, val) => acc.concat(val.types), []);
+
   console.log("ßßßß2222", pokemonTypes);
   const getBackgroundType = (type: IPokemonType[]) => {
     const pokeType = type[0].type.name;
