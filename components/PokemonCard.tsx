@@ -19,24 +19,27 @@ const typeColor = {
 };
 
 interface IPokemonType {
-  pokemon_v2_type: { name: string };
+  types: Array<{ type: { name: string } }>;
 }
 
 interface IPokemonCardProps {
   id: number;
   name: string;
-  type: IPokemonType[];
+  types: IPokemonType[];
 }
 
-function PokemonCard({ id, name, type }: IPokemonCardProps) {
+function PokemonCard({ id, name, types }: IPokemonCardProps) {
+  const pokemonTypes = types.reduce((acc, val) => acc.concat(val.types), []);
+  console.log("ßßßß", types);
+  console.log("ßßßß2222", pokemonTypes);
   const getBackgroundType = (type: IPokemonType[]) => {
-    const pokeType = type[0].pokemon_v2_type.name;
+    const pokeType = type[0].type.name;
     return `radial-gradient(circle at 50% 0%, ${typeColor[pokeType]} 36%, #fff 36%)`;
   };
 
   const renderPokemonType = (types: IPokemonType[]) => {
     return types.map((type) => {
-      const typeName = type.pokemon_v2_type.name;
+      const typeName = type.type.name;
       return (
         <div
           key={typeName}
@@ -57,13 +60,13 @@ function PokemonCard({ id, name, type }: IPokemonCardProps) {
       <article
         className="overflow-hidden rounded-lg shadow-lg"
         style={{
-          background: getBackgroundType(type),
+          background: getBackgroundType(pokemonTypes),
         }}
       >
         <img
           className="block h-40 mx-auto my-10"
           src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${id}.svg`}
-          alt="butter"
+          alt={name}
         />
         <div className="flex items-center justify-center leading-tight p-2 md:p-4">
           <h1 className="text-lg font-semibold capitalize text-black">
@@ -72,7 +75,7 @@ function PokemonCard({ id, name, type }: IPokemonCardProps) {
         </div>
 
         <div className="flex items-center justify-center leading-none p-2 md:p-4 gap-4">
-          {renderPokemonType(type)}
+          {renderPokemonType(pokemonTypes)}
         </div>
       </article>
     </div>
