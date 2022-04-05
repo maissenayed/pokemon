@@ -1,9 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
-import { createPortal } from "react-dom";
-import { Fragment, useEffect } from "react";
-import ClientOnlyPortal from "./ClientOnlyPortal";
+import { useEffect } from "react";
 import PokemonStats from "./PokemonStats";
-import { Dialog, Transition } from "@headlessui/react";
+import { Dialog } from "@headlessui/react";
 interface IModalProps {
   isOpened: boolean;
   closeModal: () => void;

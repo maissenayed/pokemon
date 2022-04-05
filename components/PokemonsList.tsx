@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import usePokemons from "../hooks/usePokemons";
 import PokemonCard from "./PokemonCard";
-import LoaderSvg from "../assets/loader.svg";
 import { useState } from "react";
 import Modal from "./Modal";
 import { useQueryClient } from "react-query";
